@@ -1,3 +1,11 @@
 spring:
   application:
-    name: URLShortner
+    name: URLShortener
+
+  profiles:
+    active: dev
+
+server:
+  port: 8080
+  servlet:
+    context-path: /api
