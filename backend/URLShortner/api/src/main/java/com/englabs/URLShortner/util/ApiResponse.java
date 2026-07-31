@@ -24,6 +24,12 @@ public class ApiResponse<T> {
                 ));
     }
 
+    public static <T> ResponseEntity<ApiResponse<T>> getError(HttpStatus statusCode, String message) {
+        return ResponseEntity
+                .status(statusCode)
+                .body(new ApiResponse<>(statusCode.toString(), message, null));
+    }
+
     public static <T> ResponseEntity<ApiResponse<T>> getError(String message) {
         return ResponseEntity
                 .status(HttpStatus.INTERNAL_SERVER_ERROR)

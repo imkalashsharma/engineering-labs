@@ -3,6 +3,7 @@ package com.englabs.URLShortner.service.impl;
 import com.englabs.URLShortner.App;
 import com.englabs.URLShortner.config.AppProperties;
 import com.englabs.URLShortner.entity.UrlLookupEntity;
+import com.englabs.URLShortner.exception.ResourceNotFoundException;
 import com.englabs.URLShortner.model.UrlShortenResponse;
 import com.englabs.URLShortner.repository.UrlShortenerRepository;
 import com.englabs.URLShortner.model.HashStrategy;
@@ -68,7 +69,7 @@ public class UrlShortenerServiceImpl implements UrlShortenerService {
 
         // if already present, then return short code
         if(storedUrl == null){
-            throw new RuntimeException("Url lookup entry not found.");
+            throw new ResourceNotFoundException("Url lookup entry not found.");
         }
 
         return storedUrl.getOriginalUrl();
