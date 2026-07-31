@@ -1,9 +1,11 @@
 package com.englabs.URLShortner.service.impl;
 
+import com.englabs.URLShortner.App;
+import com.englabs.URLShortner.config.AppProperties;
 import com.englabs.URLShortner.entity.UrlLookupEntity;
 import com.englabs.URLShortner.model.UrlShortenResponse;
 import com.englabs.URLShortner.repository.UrlShortenerRepository;
-import com.englabs.URLShortner.service.HashStrategy;
+import com.englabs.URLShortner.model.HashStrategy;
 import com.englabs.URLShortner.service.HashingStrategy;
 import com.englabs.URLShortner.service.UrlShortenerService;
 import jakarta.transaction.Transactional;
@@ -17,10 +19,12 @@ import java.util.Objects;
 @Service
 public class UrlShortenerServiceImpl implements UrlShortenerService {
     private final UrlShortenerRepository urlShortenerRepository;
+    private final AppProperties appProperties;
 
     @Autowired
-    public UrlShortenerServiceImpl(UrlShortenerRepository urlShortenerRepository) {
+    public UrlShortenerServiceImpl(UrlShortenerRepository urlShortenerRepository, AppProperties appProperties) {
         this.urlShortenerRepository = urlShortenerRepository;
+        this.appProperties = appProperties;
     }
 
     @Override
@@ -36,7 +40,9 @@ public class UrlShortenerServiceImpl implements UrlShortenerService {
 
         // if already present, then return short code
         if(storedUrl != null){
-            return new UrlShortenResponse(storedUrl.getShortCode());
+            // build complete url
+            String completeUrl = appProperties.getBaseUrl() + storedUrl.getShortCode();
+            return new UrlShortenResponse(completeUrl);
         }
 
         // hash url
@@ -50,7 +56,22 @@ public class UrlShortenerServiceImpl implements UrlShortenerService {
         urlShortenerRepository.save(urlLookupEntity);
         log.info("Url lookup entry added successfully.");
 
-        return new UrlShortenResponse(shortCode);
+        // build complete url
+        String completeUrl = appProperties.getBaseUrl() + shortCode;
+        return new UrlShortenResponse(completeUrl);
+    }
+
+    @Override
+    public String getRedirectUrl(String url) {
+        // check if url already exists
+        UrlLookupEntity storedUrl = urlShortenerRepository.findByShortCode(url);
+
+        // if already present, then return short code
+        if(storedUrl == null){
+            throw new RuntimeException("Url lookup entry not found.");
+        }
+
+        return storedUrl.getOriginalUrl();
     }
 
     // method to get hashing strategy instance

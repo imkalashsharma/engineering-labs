@@ -1,4 +1,4 @@
-package com.englabs.URLShortner.service;
+package com.englabs.URLShortner.model;
 
 import lombok.Getter;
 

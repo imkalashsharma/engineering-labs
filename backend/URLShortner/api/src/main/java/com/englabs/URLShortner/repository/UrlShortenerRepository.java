@@ -5,4 +5,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface UrlShortenerRepository extends JpaRepository<UrlLookupEntity, Long> {
     UrlLookupEntity findByOriginalUrl(String url);
+
+    UrlLookupEntity findByShortCode(String url);
 }
