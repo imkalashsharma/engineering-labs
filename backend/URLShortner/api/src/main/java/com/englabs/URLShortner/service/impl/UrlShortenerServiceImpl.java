@@ -12,6 +12,7 @@ import com.englabs.URLShortner.service.UrlShortenerService;
 import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 import java.util.Objects;
@@ -54,7 +55,13 @@ public class UrlShortenerServiceImpl implements UrlShortenerService {
         urlLookupEntity.setShortCode(shortCode);
 
         // save entity
-        urlShortenerRepository.save(urlLookupEntity);
+        // also handling concurrent user scenario
+        try {
+            urlShortenerRepository.save(urlLookupEntity);
+        } catch (DataIntegrityViolationException e) {
+            UrlLookupEntity savedUrl = urlShortenerRepository.findByOriginalUrl(url);
+            return new UrlShortenResponse(savedUrl.getShortCode());
+        }
         log.info("Url lookup entry added successfully.");
 
         // build complete url
