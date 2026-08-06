@@ -1,0 +1,55 @@
+name: URL Shortener Deploy
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - "backend/URLShortner/api/**"
+      - ".github/workflows/deploy.yml"
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        working-directory: backend/URLShortner/api
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 21
+          cache: maven
+
+      - name: Build
+        run: mvn clean package -DskipTests
+
+      - name: Copy JAR to EC2
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USER }}
+          key: ${{ secrets.EC2_SSH_KEY }}
+          source: "backend/URLShortner/api/target/*.jar"
+          target: "/home/ubuntu/url-shortener"
+
+      - name: Restart application
+        uses: appleboy/ssh-action@v1.2.0
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USER }}
+          key: ${{ secrets.EC2_SSH_KEY }}
+          script: |
+            mkdir -p /home/ubuntu/url-shortener
+
+            pkill -f 'java -jar' || true
+
+            JAR=$(find /home/ubuntu/url-shortener -name "*.jar" | head -n 1)
+
+            nohup java -jar "$JAR" > /home/ubuntu/url-shortener/app.log 2>&1 &
