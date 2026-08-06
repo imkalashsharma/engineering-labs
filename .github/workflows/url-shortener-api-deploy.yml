@@ -6,7 +6,7 @@ on:
       - main
     paths:
       - "backend/URLShortner/api/**"
-      - ".github/workflows/deploy.yml"
+      - ".github/workflows/url-shortener-api-deploy.yml"
 
 jobs:
   deploy:
