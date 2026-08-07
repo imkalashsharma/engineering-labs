@@ -86,7 +86,8 @@ public class UrlShortenerServiceImpl implements UrlShortenerService {
     private HashingStrategy getStrategy(HashStrategy strategy) {
         if (Objects.requireNonNull(strategy) == HashStrategy.SHA256Strategy) {
             return new SHA256Strategy();
-        } else {
+        }
+        else {
             return null;
         }
     }
