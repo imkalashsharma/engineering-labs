@@ -20,6 +20,9 @@ spring:
 
 app:
   baseUrl: ${BASE_URL}
+  cors:
+    allowed-origins:
+      - https://your-production-frontend.com
 
 logging:
   level:
