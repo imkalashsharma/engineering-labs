@@ -25,7 +25,7 @@ I build small applications to understand how engineering concepts work in practi
 
 Practical backend services, APIs, and application architecture.
 
-* [URL Shortener](./backend/URLShortner) — REST API, persistence, Docker, CI/CD
+* [URL Shortener](./backend/URLShortner) — REST API, persistence, Docker, CI/CD ([Try it out!](https://k99-us.netlify.app/))
 
 ### 🏗️ System Design
 
