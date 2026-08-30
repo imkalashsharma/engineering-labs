@@ -1,6 +1,6 @@
 package com.englabs.URLShortner.service.impl;
 
-import com.englabs.URLShortner.App;
+import com.englabs.URLShortner.bloom.BloomFilter;
 import com.englabs.URLShortner.config.AppProperties;
 import com.englabs.URLShortner.entity.UrlLookupEntity;
 import com.englabs.URLShortner.exception.ResourceNotFoundException;
@@ -22,11 +22,17 @@ import java.util.Objects;
 public class UrlShortenerServiceImpl implements UrlShortenerService {
     private final UrlShortenerRepository urlShortenerRepository;
     private final AppProperties appProperties;
+    private final BloomFilter bloomFilter;
 
     @Autowired
-    public UrlShortenerServiceImpl(UrlShortenerRepository urlShortenerRepository, AppProperties appProperties) {
+    public UrlShortenerServiceImpl(
+            UrlShortenerRepository urlShortenerRepository,
+            AppProperties appProperties,
+            BloomFilter bloomFilter
+    ) {
         this.urlShortenerRepository = urlShortenerRepository;
         this.appProperties = appProperties;
+        this.bloomFilter = bloomFilter;
     }
 
     @Override
@@ -58,6 +64,8 @@ public class UrlShortenerServiceImpl implements UrlShortenerService {
         // also handling concurrent user scenario
         try {
             urlShortenerRepository.save(urlLookupEntity);
+
+            bloomFilter.add(shortCode);
         } catch (DataIntegrityViolationException e) {
             UrlLookupEntity savedUrl = urlShortenerRepository.findByOriginalUrl(url);
             return new UrlShortenResponse(savedUrl.getShortCode());
@@ -71,6 +79,12 @@ public class UrlShortenerServiceImpl implements UrlShortenerService {
 
     @Override
     public String getRedirectUrl(String url) {
+        if (!bloomFilter.mightContain(url)) {
+            log.debug("Short code definitely does not exist: {}", url);
+
+            throw new ResourceNotFoundException("Url lookup entry not found.");
+        }
+
         // check if url already exists
         UrlLookupEntity storedUrl = urlShortenerRepository.findByShortCode(url);
 
