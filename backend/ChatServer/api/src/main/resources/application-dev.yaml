@@ -1,0 +1,17 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/chatserver
+    username: postgres
+    password: pass@123
+    driver-class-name: org.postgresql.Driver
+
+app:
+  cors:
+    allowed-origins:
+      - http://localhost:5173
+
+logging:
+  level:
+    org.hibernate.SQL: DEBUG
+    org.hibernate.orm.jdbc.bind: TRACE
+    com.zaxxer.hikari: DEBUG
