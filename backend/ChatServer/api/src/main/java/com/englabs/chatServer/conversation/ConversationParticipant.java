@@ -25,6 +25,6 @@ public class ConversationParticipant {
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
-    @Column(name = "created_at", nullable = false)
-    private Instant createdAt;
+    @Column(name = "joined_at", nullable = false)
+    private Instant joinedAt;
 }
