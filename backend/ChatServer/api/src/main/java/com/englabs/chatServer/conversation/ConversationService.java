@@ -8,6 +8,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.Instant;
 import java.util.UUID;
 
 @Slf4j
@@ -72,7 +73,6 @@ public class ConversationService {
 
         // create new user
         User user = new User();
-        user.setId(UUID.randomUUID());
         user.setName(username);
 
         userRepository.save(user);
@@ -82,6 +82,7 @@ public class ConversationService {
         participant.setId(new ConversationParticipantId(conversation.getId(), user.getId()));
         participant.setUser(user);
         participant.setConversation(conversation);
+        participant.setJoinedAt(Instant.now());
 
         conversationParticipantRepository.save(participant);
 

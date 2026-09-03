@@ -28,10 +28,10 @@ public class ConversationController {
 
     @PostMapping("/{conversationCode}/join")
     public ResponseEntity<JoinConversationResponse> joinConversation(
-            @PathVariable String code,
+            @PathVariable String conversationCode,
             @Valid @RequestBody JoinConversationRequest request
     ) {
-        JoinConversationResponse response = conversationService.joinConversation(code, request.username());
+        JoinConversationResponse response = conversationService.joinConversation(conversationCode, request.username());
 
         return ResponseEntity.ok(response);
     }
