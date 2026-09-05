@@ -1,3 +1,7 @@
+import SocialLinkFactory from "./SocialLinkFactory";
+
+import socialUrls from "../../resources/socialUrls.json";
+
 const Banner = () => {
   const imgSrc: string = "/icon_128.png";
 
@@ -20,9 +24,13 @@ const Banner = () => {
 
 const Navbar = () => {
   return (
-    <div className="navbar p-4">
+    <div className="navbar flex items-center p-4 justify-between">
       <div className="navbar__banner">
         <Banner />
+      </div>
+
+      <div className="navbar__links justify-self-end">
+        <SocialLinkFactory type="github" url={socialUrls.github_canto} />
       </div>
     </div>
   );
