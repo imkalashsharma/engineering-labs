@@ -1,4 +1,5 @@
 import { ConversationControlPanel } from "../../features/conversation";
+import { ConversationProvider } from "../../features/conversation/context/ConversationContext";
 import Navbar from "./Navbar";
 
 const AppLayout = () => {
@@ -9,7 +10,9 @@ const AppLayout = () => {
       </div>
 
       <div className="app__conversation">
-        <ConversationControlPanel />
+        <ConversationProvider>
+          <ConversationControlPanel />
+        </ConversationProvider>
       </div>
     </div>
   );
