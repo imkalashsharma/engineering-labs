@@ -1,6 +1,7 @@
 import { ChatPanel } from "../../features/chat";
 import { ConversationControlPanel } from "../../features/conversation";
 import { ConversationProvider } from "../../features/conversation/context/ConversationContext";
+import Footer from "./Footer";
 import Navbar from "./Navbar";
 
 const AppLayout = () => {
@@ -10,7 +11,7 @@ const AppLayout = () => {
         <Navbar />
       </div>
 
-      <div>
+      <div className="mb-8">
         <ConversationProvider>
           <div className="app__conversation mb-8">
             <ConversationControlPanel />
@@ -20,6 +21,10 @@ const AppLayout = () => {
             <ChatPanel />
           </div>
         </ConversationProvider>
+      </div>
+
+      <div className="app__footer">
+        <Footer />
       </div>
     </div>
   );

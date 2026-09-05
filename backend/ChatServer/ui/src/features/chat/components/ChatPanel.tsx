@@ -3,6 +3,8 @@ import ChatPanelHeader from "./ChatPanelHeader";
 // types
 import type { ChatPanelPresentationPropsInterface, User } from "../type";
 import JoinConversationPanel from "./JoinConversationPanel";
+import ChatView from "./ChatView";
+import ChatInput from "./ChatInput";
 
 const ChatPanel = () => {
   const user1: User = {
@@ -40,13 +42,17 @@ const ChatPanelPresentation = ({
         <ChatPanelHeader user={user} imgUrl={imgUrl} />
       </div>
 
-      <div className="chatPanel__joinConversation">
+      <div className="chatPanel__joinConversation mb-8">
         <JoinConversationPanel name={user} />
       </div>
 
-      <div className="chatPanel__chatView"></div>
+      <div className="chatPanel__chatView mb-6">
+        <ChatView />
+      </div>
 
-      <div className="chatPanel__input"></div>
+      <div className="chatPanel__input">
+        <ChatInput />
+      </div>
     </div>
   );
 };
