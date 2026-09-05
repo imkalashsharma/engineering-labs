@@ -6,7 +6,7 @@ const Banner = () => {
   const imgSrc: string = "/icon_128.png";
 
   return (
-    <div className="banner flex gap-5 mb-3">
+    <div className="banner flex gap-5">
       <div className="banner__icon flex flex-col justify-center">
         <img className="w-8" src={imgSrc} alt="canto icon" />
       </div>
@@ -24,7 +24,7 @@ const Banner = () => {
 
 const Navbar = () => {
   return (
-    <div className="navbar flex items-center p-4 justify-between">
+    <div className="navbar flex items-center justify-between">
       <div className="navbar__banner">
         <Banner />
       </div>
