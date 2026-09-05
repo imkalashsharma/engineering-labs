@@ -10,7 +10,7 @@ const ConversationControlPanel = () => {
 
   return (
     <div className="flex items-center justify-center">
-      <div className="conversationControlPanel flex items-center justify-around w-5/6 bg-neutral-100 shadow-lg rounded-md p-4">
+      <div className="conversationControlPanel flex items-center justify-between w-5/6 rounded-md p-4">
         <div className="conversation__header">
           <ConversationHeader />
         </div>
