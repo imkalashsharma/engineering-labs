@@ -23,7 +23,7 @@ const AppLayout = () => {
         </ConversationProvider>
       </div>
 
-      <div className="app__footer">
+      <div className="app__footer mb-10">
         <Footer />
       </div>
     </div>

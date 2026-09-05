@@ -1,5 +1,9 @@
 import { Button } from "../ui/button";
-import { IconBrandGithubCopilot } from "@tabler/icons-react";
+import {
+  IconBrandGithubCopilot,
+  IconBrandLinkedin,
+  IconMailOpened,
+} from "@tabler/icons-react";
 import type { ReactNode } from "react";
 
 // types
@@ -17,10 +21,17 @@ interface LinkProps {
 const SocialLinkFactory = ({ type, url }: SocialLinkFactoryProps) => {
   const icons = {
     github: <IconBrandGithubCopilot data-icon="inline-end" />,
+    email: <IconMailOpened data-icon="inline-end" />,
+    linkedin: <IconBrandLinkedin data-icon="inline-end" />,
   };
 
   if (type === "github")
     return <Link type={type} url={url} img={icons.github} />;
+
+  if (type === "email") return <Link type={type} url={url} img={icons.email} />;
+
+  if (type === "linkedin")
+    return <Link type={type} url={url} img={icons.linkedin} />;
 
   return null;
 };
