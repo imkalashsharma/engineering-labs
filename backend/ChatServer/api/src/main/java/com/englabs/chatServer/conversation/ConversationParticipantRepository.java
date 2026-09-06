@@ -3,6 +3,6 @@ package com.englabs.chatServer.conversation;
 import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.UUID;
 
-public interface ConversationParticipantRepository extends JpaRepository<ConversationParticipant, UUID> {
+public interface ConversationParticipantRepository extends JpaRepository<ConversationParticipant, ConversationParticipantId> {
     long countByIdConversationId(UUID conversationId);
 }

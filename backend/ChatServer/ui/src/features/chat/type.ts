@@ -1,6 +1,7 @@
 export interface ChatPanelHeaderPropsInterface {
-  user: string;
+  userState: UserStateType;
   imgUrl: string;
+  joinState: JoinStateType;
 }
 
 export interface ChatPanelPresentationPropsInterface {
@@ -11,4 +12,16 @@ export interface ChatPanelPresentationPropsInterface {
 export type User = {
   name: string;
   imgUrl: string;
+};
+
+export type JoinStateType = {
+  joinState: boolean;
+  enableJoin: () => void;
+  disableJoin: () => void;
+};
+
+export type UserStateType = {
+  user: string;
+  userId: string | null;
+  putUserId: (userId: string | null) => void;
 };

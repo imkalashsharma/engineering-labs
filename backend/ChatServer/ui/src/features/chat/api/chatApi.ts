@@ -20,3 +20,10 @@ export async function joinConversation(
 
   return response.data;
 }
+
+export async function leaveConversation(
+  conversationCode: string,
+  userId: string,
+) {
+  await api.delete(`/conversations/${conversationCode}/participants/${userId}`);
+}

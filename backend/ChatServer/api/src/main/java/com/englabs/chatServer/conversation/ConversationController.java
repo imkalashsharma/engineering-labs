@@ -8,6 +8,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.UUID;
+
 @RestController
 @RequestMapping("/api/conversations")
 public class ConversationController {
@@ -34,5 +36,12 @@ public class ConversationController {
         JoinConversationResponse response = conversationService.joinConversation(conversationCode, request.username());
 
         return ResponseEntity.ok(response);
+    }
+
+    @DeleteMapping("/{conversationCode}/participants/{userId}")
+    public ResponseEntity<CreateConversationResponse> leaveConversation(@PathVariable String conversationCode, @PathVariable UUID userId) {
+        conversationService.leaveConversation(conversationCode, userId);
+
+        return ResponseEntity.noContent().build();
     }
 }

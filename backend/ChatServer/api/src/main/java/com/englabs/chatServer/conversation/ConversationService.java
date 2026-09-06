@@ -99,4 +99,24 @@ public class ConversationService {
                 conversation.getStatus().name()
         );
     }
+
+    @Transactional
+    public void leaveConversation(String conversationCode, UUID userId) {
+        Conversation conversation = conversationRepository.findByConversationCode(conversationCode)
+                .orElseThrow(() -> new IllegalArgumentException("Conversation not found."));
+
+        ConversationParticipantId participantId = new ConversationParticipantId(conversation.getId(), userId);
+
+        ConversationParticipant conversationParticipant = conversationParticipantRepository.findById(participantId)
+                .orElseThrow(() -> new IllegalArgumentException("User is not part of the conversation."));
+
+        // delete participant
+        conversationParticipantRepository.delete(conversationParticipant);
+
+        long remainingParticipants = conversationParticipantRepository.countByIdConversationId(conversation.getId());
+
+        if(remainingParticipants == 0)
+            conversation.setStatus(ConversationStatus.CLOSED);
+        else conversation.setStatus(ConversationStatus.WAITING_FOR_USERS);
+    }
 }

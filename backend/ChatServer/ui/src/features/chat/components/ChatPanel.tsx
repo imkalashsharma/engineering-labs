@@ -5,6 +5,7 @@ import type { ChatPanelPresentationPropsInterface, User } from "../type";
 import JoinConversationPanel from "./JoinConversationPanel";
 import ChatView from "./ChatView";
 import ChatInput from "./ChatInput";
+import { useState } from "react";
 
 const ChatPanel = () => {
   const user1: User = {
@@ -36,14 +37,53 @@ const ChatPanelPresentation = ({
   user,
   imgUrl,
 }: ChatPanelPresentationPropsInterface) => {
+  const [userId, setUserId] = useState<string | null>(null);
+  const [joinState, setJoinState] = useState<boolean>(false);
+
+  const disableJoin = () => {
+    setJoinState(true);
+  };
+
+  const enableJoin = () => {
+    setJoinState(false);
+  };
+
+  const putUserId = (userId: string | null) => {
+    setUserId(userId);
+  };
+
   return (
     <div className="chatPanel">
       <div className="chatPanel__header mb-5">
-        <ChatPanelHeader user={user} imgUrl={imgUrl} />
+        <ChatPanelHeader
+          imgUrl={imgUrl}
+          joinState={{
+            joinState: joinState,
+            enableJoin: enableJoin,
+            disableJoin: disableJoin,
+          }}
+          userState={{
+            user: user,
+            userId: userId,
+            putUserId: putUserId,
+          }}
+        />
       </div>
 
       <div className="chatPanel__joinConversation mb-8">
-        <JoinConversationPanel name={user} />
+        <JoinConversationPanel
+          name={user}
+          joinState={{
+            joinState: joinState,
+            enableJoin: enableJoin,
+            disableJoin: disableJoin,
+          }}
+          userState={{
+            user: user,
+            userId: userId,
+            putUserId: putUserId,
+          }}
+        />
       </div>
 
       <div className="chatPanel__chatView mb-6">

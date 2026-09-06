@@ -2,14 +2,23 @@ import { AudioLines } from "lucide-react";
 import { Button } from "../../../components/ui/button";
 import { Field, FieldLabel } from "../../../components/ui/field";
 import { Input } from "../../../components/ui/input";
-import { useJoinConversation } from "../hooks/useJoinConversation";
+import { useJoinConversation } from "../hooks/useChat";
 import { useState } from "react";
+import type { JoinStateType, UserStateType } from "../type";
 
-const JoinConversationPanel = ({ name }: { name: string }) => {
-  const joinConversation = useJoinConversation();
-
+const JoinConversationPanel = ({
+  name,
+  joinState,
+  userState,
+}: {
+  name: string;
+  joinState: JoinStateType;
+  userState: UserStateType;
+}) => {
+  // states
   const [code, setCode] = useState<string>("");
-  const [disableJoin, setDisableJoin] = useState<boolean>(false);
+
+  const joinConversation = useJoinConversation(userState.putUserId);
 
   const handleJoinConversation = () => {
     try {
@@ -18,11 +27,11 @@ const JoinConversationPanel = ({ name }: { name: string }) => {
 
       joinConversation.mutate({ username: name, conversationCode: code });
 
-      setDisableJoin(true);
+      joinState.disableJoin();
     } catch (e) {
       console.log("Failed to join conversation", e);
 
-      setDisableJoin(false);
+      joinState.enableJoin();
     }
   };
 
@@ -41,6 +50,7 @@ const JoinConversationPanel = ({ name }: { name: string }) => {
           <FieldLabel htmlFor="code">Conversation Code</FieldLabel>
 
           <Input
+            disabled={joinState.joinState}
             onChange={(e) => setCode(e.target.value)}
             id="code"
             placeholder="Enter code"
@@ -50,7 +60,7 @@ const JoinConversationPanel = ({ name }: { name: string }) => {
 
       <div className="joinConversationPanel__joinButton">
         <Button
-          disabled={disableJoin}
+          disabled={joinState.joinState}
           onClick={handleJoinConversation}
           className="bg-green-200 hover:bg-green-300 text-green-900 cursor-pointer"
           variant={"outline"}
