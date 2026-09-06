@@ -4,15 +4,14 @@ import {
   leaveConversation,
   type JoinConversationResponse,
 } from "../api/chatApi";
-import { useConversationStatusStore } from "../../conversation/store/conversationStore";
-import { useChatPanelStore } from "../store/chatPanelStore";
+import { useAppStore } from "../../shared/store/AppStore";
 
 export function useJoinConversation(setUserId: (userId: string) => void) {
-  const incrementParticipantCount = useChatPanelStore(
+  const incrementParticipantCount = useAppStore(
     (state) => state.incrementParticipantCount,
   );
 
-  const setConversationStatus = useConversationStatusStore(
+  const setConversationStatus = useAppStore(
     (state) => state.setConversationStatus,
   );
 
@@ -45,11 +44,11 @@ export function useJoinConversation(setUserId: (userId: string) => void) {
 export function useLeaveConversation(
   setUserId: (userId: string | null) => void,
 ) {
-  const decrementParticipantCount = useChatPanelStore(
+  const decrementParticipantCount = useAppStore(
     (state) => state.decrementParticipantCount,
   );
 
-  const setConversationStatus = useConversationStatusStore(
+  const setConversationStatus = useAppStore(
     (state) => state.setConversationStatus,
   );
 

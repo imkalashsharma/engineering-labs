@@ -1,11 +1,12 @@
 import { CircleDot } from "lucide-react";
 
 import type { ConversationStatusValues } from "../types";
-import { useConversationStatusStore } from "../store/conversationStore";
+import { useAppStore } from "../../shared/store/AppStore";
 
 const ConversationStatus = () => {
-  const conversationStatus: ConversationStatusValues =
-    useConversationStatusStore((state) => state.conversationStatus);
+  const conversationStatus: ConversationStatusValues = useAppStore(
+    (state) => state.conversationStatus,
+  );
 
   return (
     <div className="conversationStatus">

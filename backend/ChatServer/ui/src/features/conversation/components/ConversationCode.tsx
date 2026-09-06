@@ -1,9 +1,9 @@
 import { Copy } from "lucide-react";
 import { Button } from "../../../components/ui/button";
-import { useConversationStore } from "../store/conversationStore";
+import { useAppStore } from "../../shared/store/AppStore";
 
 const ConversationCode = () => {
-  const conversationCode: string | null = useConversationStore(
+  const conversationCode: string | null = useAppStore(
     (state) => state.conversationCode,
   );
 

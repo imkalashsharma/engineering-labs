@@ -1,17 +1,12 @@
 import { useMutation } from "@tanstack/react-query";
 
 import { createConversation } from "../api/conversationApi";
-import {
-  useConversationStatusStore,
-  useConversationStore,
-} from "../store/conversationStore";
+import { useAppStore } from "../../shared/store/AppStore";
 
 export function useCreateConversation() {
-  const setConversationCode = useConversationStore(
-    (state) => state.setConversationCode,
-  );
+  const setConversationCode = useAppStore((state) => state.setConversationCode);
 
-  const setConversationStatus = useConversationStatusStore(
+  const setConversationStatus = useAppStore(
     (state) => state.setConversationStatus,
   );
 

@@ -4,16 +4,14 @@ import { Button } from "../../../components/ui/button";
 // types
 import type { ChatPanelHeaderPropsInterface } from "../type";
 import { useLeaveConversation } from "../hooks/useChat";
-import { useConversationStore } from "../../conversation/store/conversationStore";
+import { useAppStore } from "../../shared/store/AppStore";
 
 const ChatPanelHeader = ({
   userState,
   imgUrl,
   joinState,
 }: ChatPanelHeaderPropsInterface) => {
-  const conversationCode = useConversationStore(
-    (state) => state.conversationCode,
-  );
+  const conversationCode = useAppStore((state) => state.conversationCode);
 
   const leaveConversation = useLeaveConversation(userState.putUserId);
 
