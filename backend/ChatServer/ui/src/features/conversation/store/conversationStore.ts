@@ -1,4 +1,5 @@
 import { create } from "zustand";
+import type { ConversationStatusValues } from "../types";
 
 interface ConversationState {
   conversationCode: string | null;
@@ -23,3 +24,27 @@ export const useConversationStore = create<ConversationState>((set) => ({
     });
   },
 }));
+
+interface ConversationStatusState {
+  conversationStatus: ConversationStatusValues;
+  setConversationStatus: (status: ConversationStatusValues) => void;
+  reset: () => void;
+}
+
+export const useConversationStatusStore = create<ConversationStatusState>(
+  (set) => ({
+    conversationStatus: "INACTIVE",
+
+    setConversationStatus: (status) => {
+      set({
+        conversationStatus: status,
+      });
+    },
+
+    reset: () => {
+      set({
+        conversationStatus: "INACTIVE",
+      });
+    },
+  }),
+);

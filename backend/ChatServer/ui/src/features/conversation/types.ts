@@ -3,6 +3,7 @@ export interface ConversationCodeInterface {
 }
 
 export type ConversationStatusValues =
+  | "INACTIVE"
   | "WAITING_FOR_USERS"
   | "ACTIVE"
   | "CLOSED";
