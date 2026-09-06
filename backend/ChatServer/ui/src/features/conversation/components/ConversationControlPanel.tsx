@@ -1,13 +1,10 @@
 import { IconMessage } from "@tabler/icons-react";
 import ConversationCode from "./ConversationCode";
-import { useState } from "react";
 import GenerateCodeButton from "./GenerateCodeButton";
 import ConversationStatus from "./ConversationStatus";
 import HowItWorks from "./HowItWorks";
 
 const ConversationControlPanel = () => {
-  const [conversationCode, setConversationCode] = useState<string>("hi tehre");
-
   return (
     <div className="flex items-center justify-center">
       <div className="conversationControlPanel flex items-center justify-between w-5/6 rounded-md p-4">
@@ -16,7 +13,7 @@ const ConversationControlPanel = () => {
         </div>
 
         <div className="conversation__code">
-          <ConversationCode code={conversationCode} />
+          <ConversationCode />
         </div>
 
         <div className="conversation__generateCode flex items-center justify-center">

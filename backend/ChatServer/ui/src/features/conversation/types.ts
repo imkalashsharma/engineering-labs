@@ -2,11 +2,14 @@ export interface ConversationCodeInterface {
   code: string;
 }
 
-export type ConversationStatus = "WAITING_FOR_USERS" | "ACTIVE" | "CLOSED";
+export type ConversationStatusValues =
+  | "WAITING_FOR_USERS"
+  | "ACTIVE"
+  | "CLOSED";
 
 export interface Conversation {
   conversationCode: string;
-  status: ConversationStatus;
+  status: ConversationStatusValues;
   participantCount: number;
 }
 

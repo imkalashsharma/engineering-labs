@@ -1,19 +1,16 @@
 import { CircleDot } from "lucide-react";
-import useConversation from "../hooks/useConversation";
 
-import type { ConversationStatus } from "../types";
+import type { ConversationStatusValues } from "../types";
 
 const ConversationStatus = () => {
-  const { conversation } = useConversation();
-
   return (
     <div className="conversationStatus">
       <div className="conversationStatus__header text-sm font-medium mb-3">
         Status
       </div>
 
-      {conversation ? (
-        <ConversationDetails status={conversation.status} />
+      {false ? (
+        <ConversationDetails status={"WAITING_FOR_USERS"} />
       ) : (
         <>No conversation</>
       )}
@@ -21,7 +18,11 @@ const ConversationStatus = () => {
   );
 };
 
-const ConversationDetails = ({ status }: { status: ConversationStatus }) => {
+const ConversationDetails = ({
+  status,
+}: {
+  status: ConversationStatusValues;
+}) => {
   return (
     <div className="conversationDetails flex items-center justify-center gap-2">
       <div

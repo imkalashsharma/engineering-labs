@@ -1,9 +1,12 @@
 import { Copy } from "lucide-react";
 import { Button } from "../../../components/ui/button";
+import { useConversationStore } from "../store/conversationStore";
 
-import type { ConversationCodeInterface } from "../types";
+const ConversationCode = () => {
+  const conversationCode: string | null = useConversationStore(
+    (state) => state.conversationCode,
+  );
 
-const ConversationCode = ({ code }: ConversationCodeInterface) => {
   return (
     <div className="conversationCode flex flex-col items-center">
       <div className="conversationCode__header text-sm mb-3">
@@ -12,7 +15,7 @@ const ConversationCode = ({ code }: ConversationCodeInterface) => {
 
       <div className="conversationCode__input flex items-center gap-2 w-full">
         <div className="conversationCode__input__text py-1 px-2 rounded-sm text-xl w-4/5 bg-blue-100 text-center">
-          {code}
+          {conversationCode ? conversationCode : "- - - - - -"}
         </div>
 
         <div className="conversationCode__input__copy w-1/5">
@@ -20,7 +23,11 @@ const ConversationCode = ({ code }: ConversationCodeInterface) => {
             className="cursor-pointer"
             variant="ghost"
             size="icon"
-            onClick={() => navigator.clipboard.writeText(code)}
+            onClick={() =>
+              navigator.clipboard.writeText(
+                conversationCode ? conversationCode : "",
+              )
+            }
           >
             <Copy />
           </Button>

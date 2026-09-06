@@ -1,26 +1,15 @@
 import { Button } from "../../../components/ui/button";
 import { Plus } from "lucide-react";
 import { notify } from "../../../lib/toast";
-import useConversation from "../hooks/useConversation";
 
-import type { Conversation } from "../types";
+import { useCreateConversation } from "../hooks/useCreateConversation";
 
 const GenerateCodeButton = () => {
-  const { setConversation } = useConversation();
+  const createConversation = useCreateConversation();
 
   const handleClick = () => {
     try {
-      // make api call here
-      const code = "ISWQAS";
-
-      const conversation: Conversation = {
-        conversationCode: code,
-        status: "WAITING_FOR_USERS",
-        participantCount: 0,
-      };
-
-      // save conversation
-      setConversation(conversation);
+      createConversation.mutate();
 
       notify.success("New code generated.");
     } catch (e) {
@@ -35,6 +24,7 @@ const GenerateCodeButton = () => {
         onClick={handleClick}
         variant="default"
         size={"lg"}
+        disabled={createConversation.isPending}
       >
         <Plus data-icon="inline-end" />
         Generate New Code
