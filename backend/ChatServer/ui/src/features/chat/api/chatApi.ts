@@ -1,0 +1,22 @@
+import { api } from "../../../lib/axios";
+import type { ConversationStatusValues } from "../../conversation/types";
+
+export interface JoinConversationResponse {
+  conversationId: string;
+  userId: string;
+  status: ConversationStatusValues;
+}
+
+export async function joinConversation(
+  username: string,
+  conversationCode: string,
+) {
+  const response = await api.post<JoinConversationResponse>(
+    `/conversations/${conversationCode}/join`,
+    {
+      username,
+    },
+  );
+
+  return response.data;
+}
