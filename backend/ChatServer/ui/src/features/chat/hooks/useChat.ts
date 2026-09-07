@@ -7,6 +7,7 @@ import {
 import { useAppStore } from "../../shared/store/AppStore";
 import { createStompClient } from "../websocket/stompClient";
 import type { Client } from "@stomp/stompjs";
+import type { ChatMessage } from "../type";
 
 export function useJoinConversation() {
   const incrementParticipantCount = useAppStore(
@@ -77,7 +78,11 @@ export function useLeaveConversation(
 }
 
 // function to connect chat
-export const connectToChat = (conversationId: string, userId: string) => {
+export const connectToChat = (
+  conversationId: string,
+  userId: string,
+  setMessages: React.Dispatch<React.SetStateAction<ChatMessage[]>>,
+) => {
   const stompClient = createStompClient();
 
   stompClient.onConnect = () => {
@@ -89,6 +94,9 @@ export const connectToChat = (conversationId: string, userId: string) => {
         const event = JSON.parse(message.body);
 
         console.log("Received message:", event);
+
+        // set messages
+        setMessages((prev: ChatMessage[]) => [...prev, event]);
       },
     );
   };

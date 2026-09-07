@@ -25,7 +25,11 @@ const JoinConversationPanel = ({ username }: { username: string }) => {
           chatPanel.setConversationId(data.conversationId);
 
           // connect to websocket
-          const client = connectToChat(data.conversationId, data.userId);
+          const client = connectToChat(
+            data.conversationId,
+            data.userId,
+            chatPanel.setMessages,
+          );
           chatPanel.client.current = client;
         },
 
