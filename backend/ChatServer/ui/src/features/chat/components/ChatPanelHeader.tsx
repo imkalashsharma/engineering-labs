@@ -5,29 +5,30 @@ import { Button } from "../../../components/ui/button";
 import type { ChatPanelHeaderPropsInterface } from "../type";
 import { useLeaveConversation } from "../hooks/useChat";
 import { useAppStore } from "../../shared/store/AppStore";
+import { useChatPanel } from "../context/ChatPanelContext";
 
 const ChatPanelHeader = ({
-  userState,
+  username,
   imgUrl,
-  joinState,
 }: ChatPanelHeaderPropsInterface) => {
-  const conversationCode = useAppStore((state) => state.conversationCode);
+  const chatPanel = useChatPanel();
 
-  const leaveConversation = useLeaveConversation(userState.putUserId);
+  const conversationCode = useAppStore((state) => state.conversationCode);
+  const leaveConversation = useLeaveConversation(chatPanel.setUserId);
 
   const handleLeave = () => {
     try {
       if (!conversationCode)
         throw new Error("Conversation code cannot be empty.");
 
-      if (!userState.userId) throw new Error("User Id cannot be empty.");
+      if (!chatPanel.userId) throw new Error("User Id cannot be empty.");
 
       leaveConversation.mutate({
         conversationCode: conversationCode,
-        userId: userState.userId,
+        userId: chatPanel.userId,
       });
 
-      joinState.enableJoin();
+      chatPanel.setJoinState(true); // enable join
     } catch (e) {
       console.error(`Failed to leave conversation`, e);
     }
@@ -40,13 +41,13 @@ const ChatPanelHeader = ({
           <img
             className="w-10 h-10"
             src={imgUrl}
-            alt={`${userState.user} image`}
+            alt={`${chatPanel.userId} image`}
           />
         </div>
 
         <div className="chatPanelHeader__user__info">
           <div className="chatPanelHeader__user__info__name mb-1 font-semibold">
-            {userState.user}
+            {username}
           </div>
 
           <div className="chatPanelHeader__user__info__details text-sm">
@@ -57,7 +58,7 @@ const ChatPanelHeader = ({
 
       <div className="chatPanelHeader__leave">
         <Button
-          disabled={!joinState.joinState}
+          disabled={!chatPanel.joinState}
           onClick={handleLeave}
           className="cursor-pointer"
           variant={"destructive"}

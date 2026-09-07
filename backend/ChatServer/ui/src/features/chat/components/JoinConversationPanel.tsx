@@ -2,37 +2,40 @@ import { AudioLines } from "lucide-react";
 import { Button } from "../../../components/ui/button";
 import { Field, FieldLabel } from "../../../components/ui/field";
 import { Input } from "../../../components/ui/input";
-import { useJoinConversation } from "../hooks/useChat";
+import { connectToChat, useJoinConversation } from "../hooks/useChat";
 import { useState } from "react";
-import type { JoinStateType, UserStateType } from "../type";
+import { useChatPanel } from "../context/ChatPanelContext";
 
-const JoinConversationPanel = ({
-  name,
-  joinState,
-  userState,
-}: {
-  name: string;
-  joinState: JoinStateType;
-  userState: UserStateType;
-}) => {
+const JoinConversationPanel = ({ username }: { username: string }) => {
   // states
   const [code, setCode] = useState<string>("");
 
-  const joinConversation = useJoinConversation(userState.putUserId);
+  const chatPanel = useChatPanel();
+  const joinConversation = useJoinConversation();
 
   const handleJoinConversation = () => {
-    try {
-      if (code.length == 0)
-        throw new Error("Conversation code cannot be empty");
+    if (!code.trim()) return;
 
-      joinConversation.mutate({ username: name, conversationCode: code });
+    chatPanel.setJoinState(true); // disable
+    joinConversation.mutate(
+      { username, conversationCode: code.trim() },
+      {
+        onSuccess: (data) => {
+          chatPanel.setUserId(data.userId);
+          chatPanel.setConversationId(data.conversationId);
 
-      joinState.disableJoin();
-    } catch (e) {
-      console.log("Failed to join conversation", e);
+          // connect to websocket
+          const client = connectToChat(data.conversationId, data.userId);
+          chatPanel.client.current = client;
+        },
 
-      joinState.enableJoin();
-    }
+        onError: (error) => {
+          console.error("Failed to join conversation", error);
+
+          chatPanel.setJoinState(false);
+        },
+      },
+    );
   };
 
   return (
@@ -41,7 +44,7 @@ const JoinConversationPanel = ({
         <Field>
           <FieldLabel htmlFor="name">Your Name</FieldLabel>
 
-          <Input id="name" value={name} disabled={true} />
+          <Input id="name" value={username} disabled={true} />
         </Field>
       </div>
 
@@ -50,7 +53,7 @@ const JoinConversationPanel = ({
           <FieldLabel htmlFor="code">Conversation Code</FieldLabel>
 
           <Input
-            disabled={joinState.joinState}
+            disabled={chatPanel.joinState}
             onChange={(e) => setCode(e.target.value)}
             id="code"
             placeholder="Enter code"
@@ -60,7 +63,7 @@ const JoinConversationPanel = ({
 
       <div className="joinConversationPanel__joinButton">
         <Button
-          disabled={joinState.joinState}
+          disabled={chatPanel.joinState}
           onClick={handleJoinConversation}
           className="bg-green-200 hover:bg-green-300 text-green-900 cursor-pointer"
           variant={"outline"}

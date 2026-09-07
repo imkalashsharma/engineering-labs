@@ -5,8 +5,10 @@ import {
   type JoinConversationResponse,
 } from "../api/chatApi";
 import { useAppStore } from "../../shared/store/AppStore";
+import { createStompClient } from "../websocket/stompClient";
+import type { Client } from "@stomp/stompjs";
 
-export function useJoinConversation(setUserId: (userId: string) => void) {
+export function useJoinConversation() {
   const incrementParticipantCount = useAppStore(
     (state) => state.incrementParticipantCount,
   );
@@ -22,13 +24,10 @@ export function useJoinConversation(setUserId: (userId: string) => void) {
     }: {
       username: string;
       conversationCode: string;
-    }) => joinConversation(username, conversationCode),
+    }) => joinConversation(username, conversationCode.trim()),
 
     onSuccess: (data: JoinConversationResponse) => {
       console.log(`POST: Join conversation action`, data);
-
-      // set user id
-      setUserId(data.userId);
 
       // set conversation status
       const newCount = incrementParticipantCount();
@@ -76,3 +75,47 @@ export function useLeaveConversation(
     },
   });
 }
+
+// function to connect chat
+export const connectToChat = (conversationId: string, userId: string) => {
+  const stompClient = createStompClient();
+
+  stompClient.onConnect = () => {
+    console.log("Connected as:", userId);
+
+    stompClient.subscribe(
+      `/topic/conversations/${conversationId}`,
+      (message) => {
+        const event = JSON.parse(message.body);
+
+        console.log("Received message:", event);
+      },
+    );
+  };
+
+  stompClient.activate();
+
+  return stompClient;
+};
+
+// function to send message
+export const sendMessage = (
+  client: Client | null,
+  conversationId: string,
+  userId: string,
+  content: string,
+) => {
+  if (!client?.connected) {
+    console.log("WebSocket is not connected");
+    return;
+  }
+
+  client.publish({
+    destination: `/app/conversations/${conversationId}/messages`,
+    body: JSON.stringify({
+      conversationId,
+      senderId: userId,
+      content,
+    }),
+  });
+};
