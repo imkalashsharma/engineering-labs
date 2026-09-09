@@ -1,21 +1,21 @@
 package com.englabs.chatServer.conversation;
 
+import com.englabs.chatServer.config.ChatMessageProducer;
 import com.englabs.chatServer.conversation.dto.event.ChatMessageEvent;
 import com.englabs.chatServer.conversation.dto.request.ChatMessage;
 import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.stereotype.Controller;
-import org.springframework.messaging.simp.SimpMessagingTemplate;
 
 import java.time.Instant;
 import java.util.UUID;
 
 @Controller
 public class ChatWebSocketController {
-    private final SimpMessagingTemplate messagingTemplate;
+    private final ChatMessageProducer messageProducer;
 
-    public ChatWebSocketController(SimpMessagingTemplate messagingTemplate) {
-        this.messagingTemplate = messagingTemplate;
+    public ChatWebSocketController(ChatMessageProducer messageProducer) {
+        this.messageProducer = messageProducer;
     }
 
     @MessageMapping("/conversations/{conversationId}/messages")
@@ -31,8 +31,6 @@ public class ChatWebSocketController {
                 Instant.now()
         );
 
-        messagingTemplate.convertAndSend("/topic/conversations/" + conversationId, messageEvent);
+        messageProducer.publish(messageEvent);
     }
-
-
 }
