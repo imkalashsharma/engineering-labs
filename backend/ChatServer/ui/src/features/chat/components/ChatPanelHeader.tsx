@@ -4,7 +4,6 @@ import { Button } from "../../../components/ui/button";
 // types
 import type { ChatPanelHeaderPropsInterface } from "../type";
 import { useLeaveConversation } from "../hooks/useChat";
-import { useAppStore } from "../../shared/store/AppStore";
 import { useChatPanel } from "../context/ChatPanelContext";
 
 const ChatPanelHeader = ({
@@ -13,25 +12,43 @@ const ChatPanelHeader = ({
 }: ChatPanelHeaderPropsInterface) => {
   const chatPanel = useChatPanel();
 
-  const conversationCode = useAppStore((state) => state.conversationCode);
   const leaveConversation = useLeaveConversation(chatPanel.setUserId);
 
   const handleLeave = () => {
-    try {
-      if (!conversationCode)
-        throw new Error("Conversation code cannot be empty.");
+    const client = chatPanel.client.current;
 
-      if (!chatPanel.userId) throw new Error("User Id cannot be empty.");
-
-      leaveConversation.mutate({
-        conversationCode: conversationCode,
-        userId: chatPanel.userId,
-      });
-
-      chatPanel.setJoinState(true); // enable join
-    } catch (e) {
-      console.error(`Failed to leave conversation`, e);
+    if (client) {
+      client.deactivate();
+      chatPanel.client.current = null;
     }
+
+    if (!chatPanel.conversationCode)
+      throw new Error("Conversation code cannot be empty.");
+
+    if (!chatPanel.userId) throw new Error("User Id cannot be empty.");
+
+    leaveConversation.mutate(
+      {
+        conversationCode: chatPanel.conversationCode,
+        userId: chatPanel.userId,
+      },
+      {
+        onSuccess: () => {
+          chatPanel.setConversationId(null);
+          chatPanel.setConversationCode(null);
+          chatPanel.setUserId(null);
+          chatPanel.setMessages([]);
+          chatPanel.setJoinState(false);
+        },
+
+        onError: (error) => {
+          console.error("Failed to leave conversation", error);
+        },
+      },
+    );
+
+    chatPanel.setJoinState(false); // enable join
+    chatPanel.setMessages([]); // clear chats
   };
 
   return (

@@ -5,6 +5,8 @@ import { Input } from "../../../components/ui/input";
 import { connectToChat, useJoinConversation } from "../hooks/useChat";
 import { useState } from "react";
 import { useChatPanel } from "../context/ChatPanelContext";
+import { getMessageHistory } from "../api/chatApi";
+import type { ChatMessage } from "../type";
 
 const JoinConversationPanel = ({ username }: { username: string }) => {
   // states
@@ -16,11 +18,13 @@ const JoinConversationPanel = ({ username }: { username: string }) => {
   const handleJoinConversation = () => {
     if (!code.trim()) return;
 
+    chatPanel.setConversationCode(code.trim()); // set code for panel
+
     chatPanel.setJoinState(true); // disable
     joinConversation.mutate(
       { username, conversationCode: code.trim() },
       {
-        onSuccess: (data) => {
+        onSuccess: async (data) => {
           chatPanel.setUserId(data.userId);
           chatPanel.setConversationId(data.conversationId);
 
@@ -30,7 +34,20 @@ const JoinConversationPanel = ({ username }: { username: string }) => {
             data.userId,
             chatPanel.setMessages,
           );
+
           chatPanel.client.current = client;
+
+          // fetch message history
+          try {
+            const history: ChatMessage[] = await getMessageHistory(code.trim());
+
+            chatPanel.setMessages((currentMessages) => [
+              ...history,
+              ...currentMessages,
+            ]);
+          } catch (error) {
+            console.error("Failed to fetch message history", error);
+          }
         },
 
         onError: (error) => {

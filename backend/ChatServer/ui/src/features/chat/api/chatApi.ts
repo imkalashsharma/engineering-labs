@@ -27,3 +27,14 @@ export async function leaveConversation(
 ) {
   await api.delete(`/conversations/${conversationCode}/participants/${userId}`);
 }
+
+export async function getMessageHistory(conversationCode: string) {
+  const response = await api.get(`/conversations/${conversationCode}/messages`);
+
+  console.log(
+    `Messages retrieved for conversation code: ${conversationCode}`,
+    response.data,
+  );
+
+  return response.data;
+}

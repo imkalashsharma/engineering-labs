@@ -1,5 +1,7 @@
 package com.englabs.chatServer.conversation;
 
+import com.englabs.chatServer.chat.MessageService;
+import com.englabs.chatServer.chat.dto.response.ChatMessageHistoryItem;
 import com.englabs.chatServer.conversation.dto.response.CreateConversationResponse;
 import com.englabs.chatServer.conversation.dto.response.JoinConversationResponse;
 import com.englabs.chatServer.user.User;
@@ -9,11 +11,15 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Instant;
+import java.util.List;
 import java.util.UUID;
+import java.util.Optional;
 
 @Slf4j
 @Service
 public class ConversationService {
+    private final MessageService messageService;
+
     private final ConversationRepository conversationRepository;
     private final ConversationParticipantRepository conversationParticipantRepository;
     private final UserRepository userRepository;
@@ -21,11 +27,13 @@ public class ConversationService {
     private final ConversationCodeGenerator codeGenerator;
 
     public ConversationService(
+            MessageService messageService,
             ConversationRepository conversationRepository,
             ConversationParticipantRepository conversationParticipantRepository,
             UserRepository userRepository,
             ConversationCodeGenerator codeGenerator
     ) {
+        this.messageService = messageService;
         this.codeGenerator = codeGenerator;
         this.conversationParticipantRepository = conversationParticipantRepository;
         this.conversationRepository = conversationRepository;
@@ -71,11 +79,18 @@ public class ConversationService {
         if(participantCount >= 2)
             throw new IllegalStateException("Conversation already have 2 participants.");
 
-        // create new user
-        User user = new User();
-        user.setName(username);
+        // find user
+        Optional<User> existingUser = userRepository.findByName(username);
+        User user;
 
-        userRepository.save(user);
+        // only create if user is not present in DB
+        if(existingUser.isEmpty()) {
+            // create new user
+            user = new User();
+            user.setName(username);
+
+            userRepository.save(user);
+        } else user = existingUser.get();
 
         // add new participant in the conversation
         ConversationParticipant participant = new ConversationParticipant();
@@ -118,5 +133,13 @@ public class ConversationService {
         if(remainingParticipants == 0)
             conversation.setStatus(ConversationStatus.CLOSED);
         else conversation.setStatus(ConversationStatus.WAITING_FOR_USERS);
+    }
+
+    public List<ChatMessageHistoryItem> getMessages(String conversationCode) {
+        Conversation conversation = conversationRepository
+                .findByConversationCode(conversationCode)
+                .orElseThrow(() -> new IllegalArgumentException("No conversation found with code " + conversationCode));
+
+        return messageService.getHistory(conversationCode);
     }
 }
