@@ -2,7 +2,10 @@ package com.englabs.chatServer.chat;
 
 import com.englabs.chatServer.conversation.dto.event.ChatMessageEvent;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.kafka.annotation.BackOff;
+import org.springframework.kafka.annotation.DltHandler;
 import org.springframework.kafka.annotation.KafkaListener;
+import org.springframework.kafka.annotation.RetryableTopic;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Component;
 
@@ -19,12 +22,26 @@ public class ChatMessageConsumer {
         this.messageRepository = messageRepository;
     }
 
+    @RetryableTopic(
+            attempts = "4",
+            backOff = @BackOff(
+                    delay = 1000,
+                    multiplier = 2.0
+            )
+    )
     @KafkaListener(
             topics = "chat.messages",
             groupId = "canto-chat"
     )
     public void consume(ChatMessageEvent event) {
-        log.info("Kafka consumed message: {}.", event.messageId());
+        UUID messageId = UUID.fromString(event.messageId());
+
+        log.info("Kafka consumed message: {}.", messageId);
+
+        if(messageRepository.existsByKeyMessageId(messageId)) {
+            log.info("Duplicate message ignored: {}", messageId);
+            return;
+        }
 
         // create new message key
         MessageKey messageKey = new MessageKey(
@@ -44,5 +61,10 @@ public class ChatMessageConsumer {
         messageRepository.save(message);    // save message
 
         messagingTemplate.convertAndSend("/topic/conversations/" + event.conversationId(), event);
+    }
+
+    @DltHandler
+    public void handleDlt(ChatMessageEvent event) {
+        log.info("Message permanently failed and was moved to DLT: {}", event.messageId());
     }
 }
