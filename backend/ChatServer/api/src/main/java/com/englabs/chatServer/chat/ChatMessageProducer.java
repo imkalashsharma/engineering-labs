@@ -1,4 +1,4 @@
-package com.englabs.chatServer.config;
+package com.englabs.chatServer.chat;
 
 import com.englabs.chatServer.conversation.dto.event.ChatMessageEvent;
 import org.springframework.kafka.core.KafkaTemplate;

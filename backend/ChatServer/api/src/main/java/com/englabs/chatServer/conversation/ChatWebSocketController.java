@@ -1,6 +1,6 @@
 package com.englabs.chatServer.conversation;
 
-import com.englabs.chatServer.config.ChatMessageProducer;
+import com.englabs.chatServer.chat.ChatMessageProducer;
 import com.englabs.chatServer.conversation.dto.event.ChatMessageEvent;
 import com.englabs.chatServer.conversation.dto.request.ChatMessage;
 import org.springframework.messaging.handler.annotation.DestinationVariable;

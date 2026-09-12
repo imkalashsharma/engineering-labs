@@ -5,6 +5,12 @@ spring:
     password: pass@123
     driver-class-name: org.postgresql.Driver
 
+  cassandra:
+    contact-points: localhost
+    port: 9042
+    keyspace-name: canto
+    local-datacenter: datacenter1
+
   kafka:
     bootstrap-servers: localhost:9092
 
