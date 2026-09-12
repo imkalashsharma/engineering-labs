@@ -42,8 +42,8 @@ Experiments with communication, scalability, resilience, and distributed archite
 ### 🤖 Applied AI
 
 Hands-on experiments with modern AI engineering concepts.
-* [Email Spam Classifier from Scratch]([./backend/URLShortner](https://github.com/imkalashsharma/spam-classification-ui)) — TypeScript, Python, FastAPI, Classification Model ([Try it out!](https://ai-spam-classification.netlify.app/))
-* [AI Car Search]([./backend/URLShortner](https://github.com/imkalashsharma/AICarSearch)) — Java, REST API, Gemini AI, PostgreSQL
+* [Email Spam Classifier from Scratch](https://github.com/imkalashsharma/spam-classification-ui) — TypeScript, Python, FastAPI, Classification Model ([Try it out!](https://ai-spam-classification.netlify.app/))
+* [AI Car Search](https://github.com/imkalashsharma/AICarSearch) — Java, REST API, Gemini AI, PostgreSQL
 
 ### ☁️ Cloud & DevOps
 
