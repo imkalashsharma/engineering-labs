@@ -16,10 +16,16 @@ import java.util.UUID;
 public class ChatMessageConsumer {
     private final SimpMessagingTemplate messagingTemplate;
     private final MessageRepository messageRepository;
+    private final MessagePersistenceService messagePersistenceService;
 
-    public ChatMessageConsumer(SimpMessagingTemplate simpMessagingTemplate, MessageRepository messageRepository) {
+    public ChatMessageConsumer(
+            SimpMessagingTemplate simpMessagingTemplate,
+            MessageRepository messageRepository,
+            MessagePersistenceService messagePersistenceService
+    ) {
         this.messagingTemplate = simpMessagingTemplate;
         this.messageRepository = messageRepository;
+        this.messagePersistenceService = messagePersistenceService;
     }
 
     @RetryableTopic(
@@ -38,11 +44,6 @@ public class ChatMessageConsumer {
 
         log.info("Kafka consumed message: {}.", messageId);
 
-        if(messageRepository.existsByKeyMessageId(messageId)) {
-            log.info("Duplicate message ignored: {}", messageId);
-            return;
-        }
-
         // create new message key
         MessageKey messageKey = new MessageKey(
                 event.conversationId(),
@@ -58,7 +59,7 @@ public class ChatMessageConsumer {
                 event.timestamp()
         );
 
-        messageRepository.save(message);    // save message
+        messagePersistenceService.persist(message);    // save message
 
         messagingTemplate.convertAndSend("/topic/conversations/" + event.conversationId(), event);
     }
