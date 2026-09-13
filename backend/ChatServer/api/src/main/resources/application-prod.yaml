@@ -36,7 +36,7 @@ spring:
 app:
   cors:
     allowed-origins:
-      - ${FRONTEND_URL}
+      - https://imk-canto.netlify.app
 
 logging:
   level:
