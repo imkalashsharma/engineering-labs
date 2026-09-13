@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 
-const ACTUATOR_URL = "http://localhost:8080/actuator";
+const ACTUATOR_URL = `${import.meta.env.VITE_API_URL}/actuator`;
 
 export const useMessagesProcessed = () => {
   return useQuery({
