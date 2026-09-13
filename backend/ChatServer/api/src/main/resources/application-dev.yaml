@@ -1,0 +1,52 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/chatserver
+    username: postgres
+    password: pass@123
+    driver-class-name: org.postgresql.Driver
+
+  cassandra:
+    contact-points: localhost
+    port: 9042
+    keyspace-name: canto
+    local-datacenter: datacenter1
+
+  kafka:
+    bootstrap-servers: localhost:9092
+
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JacksonJsonSerializer
+
+    consumer:
+      group-id: canto-chat
+      auto-offset-reset: earliest
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.JacksonJsonDeserializer
+      properties:
+        "[spring.json.value.default.type]": "com.englabs.chatServer.conversation.dto.event.ChatMessageEvent"
+        "[spring.json.trusted.packages]": "com.englabs.chatServer"
+
+    template:
+      observation-enabled: true
+
+    listener:
+      observation-enabled: true
+
+app:
+  cors:
+    allowed-origins:
+      - http://localhost:5173
+
+logging:
+  level:
+    org.hibernate.SQL: DEBUG
+    org.hibernate.orm.jdbc.bind: TRACE
+    com.zaxxer.hikari: DEBUG
+
+management:
+  opentelemetry:
+    tracing:
+      export:
+        otlp:
+          endpoint: http://localhost:4318/v1/traces

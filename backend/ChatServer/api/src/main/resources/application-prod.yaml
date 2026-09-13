@@ -1,0 +1,44 @@
+spring:
+  datasource:
+    url: ${DB_URL}
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
+    driver-class-name: org.postgresql.Driver
+
+  cassandra:
+    contact-points: ${CASSANDRA_CONTACT_POINT}
+    port: ${CASSANDRA_PORT}
+    keyspace-name: ${CASSANDRA_KEYSPACE}
+    local-datacenter: datacenter1
+
+  kafka:
+    bootstrap-servers: ${KAFKA_SERVER}
+
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JacksonJsonSerializer
+
+    consumer:
+      group-id: canto-chat
+      auto-offset-reset: earliest
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.JacksonJsonDeserializer
+      properties:
+        "[spring.json.value.default.type]": "com.englabs.chatServer.conversation.dto.event.ChatMessageEvent"
+        "[spring.json.trusted.packages]": "com.englabs.chatServer"
+
+    template:
+      observation-enabled: true
+
+    listener:
+      observation-enabled: true
+
+app:
+  cors:
+    allowed-origins:
+      - ${FRONTEND_URL}
+
+logging:
+  level:
+    root: INFO
+    com.englabs.chatServer: INFO
