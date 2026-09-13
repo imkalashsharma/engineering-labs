@@ -1,4 +1,4 @@
-import { AudioLinesOff } from "lucide-react";
+import { AudioLinesOff, Loader2 } from "lucide-react";
 import { Button } from "../../../components/ui/button";
 
 // types
@@ -87,7 +87,13 @@ const ChatPanelHeader = ({
           className="cursor-pointer"
           variant={"destructive"}
         >
-          <AudioLinesOff data-icon="inline-start" /> Leave
+          {leaveConversation.isPending ? (
+            <Loader2 className="animate-spin" />
+          ) : (
+            <>
+              <AudioLinesOff data-icon="inline-start" /> Leave
+            </>
+          )}
         </Button>
       </div>
     </div>

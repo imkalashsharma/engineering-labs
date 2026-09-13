@@ -1,4 +1,4 @@
-import { AudioLines } from "lucide-react";
+import { AudioLines, Loader2 } from "lucide-react";
 import { Button } from "../../../components/ui/button";
 import { Field, FieldLabel } from "../../../components/ui/field";
 import { Input } from "../../../components/ui/input";
@@ -100,8 +100,15 @@ const JoinConversationPanel = ({ username }: { username: string }) => {
           className="bg-green-200 hover:bg-green-300 text-green-900 cursor-pointer"
           variant={"outline"}
           size={"lg"}
+          aria-label="Join Conversation button"
         >
-          <AudioLines /> Join
+          {joinConversation.isPending ? (
+            <Loader2 className="animate-spin" />
+          ) : (
+            <>
+              <AudioLines /> Join
+            </>
+          )}
         </Button>
       </div>
     </div>
