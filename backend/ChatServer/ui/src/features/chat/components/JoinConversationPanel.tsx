@@ -97,7 +97,10 @@ const JoinConversationPanel = ({ username }: { username: string }) => {
         <Button
           disabled={chatPanel.joinState}
           onClick={handleJoinConversation}
-          className="bg-green-200 hover:bg-green-300 text-green-900 cursor-pointer"
+          className="    bg-emerald-100
+    text-emerald-700
+    hover:bg-emerald-200
+    border border-emerald-200 cursor-pointer"
           variant={"outline"}
           size={"lg"}
           aria-label="Join Conversation button"

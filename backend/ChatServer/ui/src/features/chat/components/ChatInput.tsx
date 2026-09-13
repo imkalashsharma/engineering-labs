@@ -6,19 +6,21 @@ import { sendMessage } from "../hooks/useChat";
 import { useChatPanel } from "../context/ChatPanelContext";
 
 const ChatInput = () => {
-  const [content, setContent] = useState<string | undefined>("");
+  const [content, setContent] = useState<string>("");
 
   const chatPanel = useChatPanel();
 
   const handleSendMessage = () => {
-    if (!content) return;
+    if (!content.trim()) return;
 
-    if (!chatPanel.conversationId)
+    if (!chatPanel.conversationId) {
       throw new Error("Conversation Id cannot be empty.");
+    }
 
-    if (!chatPanel.userId) throw new Error("User Id cannot be empty.");
+    if (!chatPanel.userId) {
+      throw new Error("User Id cannot be empty.");
+    }
 
-    // send message
     sendMessage(
       chatPanel.client.current,
       chatPanel.conversationId,
@@ -26,26 +28,42 @@ const ChatInput = () => {
       content,
     );
 
-    setContent(""); // clear input field
+    setContent("");
   };
 
   return (
-    <div className="chatInput w-full flex items-center justify-between">
-      <div className="chatInput__input w-5/6">
+    <div className="chatInput flex w-full items-center gap-3 rounded-xl border border-slate-200 bg-white p-2 shadow-sm">
+      <div className="chatInput__input flex-1">
         <Input
           placeholder="Your message ..."
           onChange={(e) => setContent(e.target.value)}
           value={content}
+          className="h-10 border-slate-200 bg-slate-50 focus-visible:ring-blue-500"
+          onKeyDown={(e) => {
+            if (e.key === "Enter") {
+              handleSendMessage();
+            }
+          }}
         />
       </div>
 
-      <div className="chatInput__sendButton w-1/6 flex justify-end">
+      <div className="chatInput__sendButton">
         <Button
-          variant={"outline"}
           onClick={handleSendMessage}
-          className="bg-blue-200 hover:bg-blue-300 text-blue-900 hover:text-blue-900 cursor-pointer"
+          disabled={!content.trim()}
+          className="
+            h-10
+            bg-blue-600
+            text-white
+            shadow-sm
+            hover:bg-blue-700
+            disabled:cursor-not-allowed
+            disabled:bg-slate-200
+            disabled:text-slate-400
+          "
         >
-          <SendHorizontal /> Send
+          <SendHorizontal className="mr-2 h-4 w-4" />
+          Send
         </Button>
       </div>
     </div>

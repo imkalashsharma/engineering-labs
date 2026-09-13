@@ -22,16 +22,19 @@ const GenerateCodeButton = () => {
   return (
     <div className="generateCodeButton">
       <Button
-        className="bg-blue-400 hover:bg-blue-500 text-white cursor-pointer"
+        className="bg-blue-600 hover:bg-blue-700 text-white shadow-sm cursor-pointer"
         onClick={handleClick}
         variant="default"
         size={"lg"}
         disabled={createConversation.isPending}
       >
         {createConversation.isPending ? (
-          <Loader2 className="animate-spin" data-icon="inline-end" />
+          <Loader2
+            className="mr-2 h-4 w-4 animate-spin"
+            data-icon="inline-end"
+          />
         ) : (
-          <Plus data-icon="inline-end" />
+          <Plus className="mr-2 h-4 w-4" data-icon="inline-end" />
         )}
         Generate New Code
       </Button>

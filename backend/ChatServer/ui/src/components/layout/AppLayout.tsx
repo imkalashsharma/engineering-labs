@@ -5,7 +5,7 @@ import Navbar from "./Navbar";
 
 const AppLayout = () => {
   return (
-    <div className="app p-4">
+    <div className="app min-h-screen bg-slate-100 text-slate-900 p-4">
       <div className="app__navbar mb-5">
         <Navbar />
       </div>

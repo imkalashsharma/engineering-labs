@@ -7,6 +7,7 @@ import { ChatPanelProvider } from "../context/ChatPanelContext";
 
 // types
 import type { ChatPanelPresentationPropsInterface, User } from "../type";
+import ObservabilityAccordion from "../../observability/components/ObservabilityAccordion";
 
 const ChatPanel = () => {
   const user1: User = {
@@ -43,7 +44,7 @@ const ChatPanelPresentation = ({
   imgUrl,
 }: ChatPanelPresentationPropsInterface) => {
   return (
-    <div className="chatPanel">
+    <div className="chatPanel rounded-2xl bg-white border border-slate-200 p-5 shadow-sm">
       <div className="chatPanel__header mb-5">
         <ChatPanelHeader username={user} imgUrl={imgUrl} />
       </div>
@@ -56,8 +57,12 @@ const ChatPanelPresentation = ({
         <ChatView />
       </div>
 
-      <div className="chatPanel__input">
+      <div className="chatPanel__input mb-8">
         <ChatInput />
+      </div>
+
+      <div className="chatPanel__observability">
+        <ObservabilityAccordion />
       </div>
     </div>
   );
