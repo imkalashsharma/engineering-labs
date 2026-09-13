@@ -1,21 +1,229 @@
 services:
+
+  # --------------------------------------------------
+  # PostgreSQL
+  # --------------------------------------------------
+
+  postgres:
+    image: postgres:17
+    container_name: canto-postgres
+
+    environment:
+      POSTGRES_DB: chatserver
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+    networks:
+      - canto-network
+
+
+  # --------------------------------------------------
+  # Cassandra
+  # --------------------------------------------------
+
   cassandra:
     image: cassandra:5.0
     container_name: canto-cassandra
-    ports:
-      - "9042:9042"
+
     environment:
       CASSANDRA_CLUSTER_NAME: canto-cluster
+
     volumes:
       - cassandra_data:/var/lib/cassandra
-      
+
+    networks:
+      - canto-network
+
+
+  # --------------------------------------------------
+  # Cassandra Schema Initialization
+  # --------------------------------------------------
+
+  cassandra-init:
+    image: cassandra:5.0
+    container_name: canto-cassandra-init
+
+    depends_on:
+      - cassandra
+
+    volumes:
+      - ./cassandra/init.cql:/init.cql:ro
+
+    networks:
+      - canto-network
+
+    entrypoint: ["/bin/bash", "-c"]
+
+    command:
+      - |
+        echo "Waiting for Cassandra..."
+
+        until cqlsh cassandra 9042 -e "DESCRIBE KEYSPACES" >/dev/null 2>&1; do
+          sleep 5
+        done
+
+        echo "Cassandra is ready."
+
+        cqlsh cassandra 9042 -f /init.cql
+
+        echo "Cassandra initialization complete."
+
+
+  # --------------------------------------------------
+  # Kafka
+  # --------------------------------------------------
+
+  kafka:
+    image: apache/kafka:4.1.0
+    container_name: canto-kafka
+
+    environment:
+      KAFKA_NODE_ID: 1
+      KAFKA_PROCESS_ROLES: broker,controller
+
+      KAFKA_LISTENERS: PLAINTEXT://:9092,CONTROLLER://:9093
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092
+
+      KAFKA_CONTROLLER_LISTENER_NAMES: CONTROLLER
+      KAFKA_CONTROLLER_QUORUM_VOTERS: 1@kafka:9093
+
+      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
+
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
+      KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
+
+      KAFKA_AUTO_CREATE_TOPICS_ENABLE: "false"
+
+    volumes:
+      - kafka_data:/var/lib/kafka/data
+
+    networks:
+      - canto-network
+
+
+  # --------------------------------------------------
+  # Kafka Topic Initialization
+  # --------------------------------------------------
+
+  kafka-init:
+    image: apache/kafka:4.1.0
+    container_name: canto-kafka-init
+
+    depends_on:
+      - kafka
+
+    networks:
+      - canto-network
+
+    entrypoint: ["/bin/bash", "-c"]
+
+    command:
+      - |
+        echo "Waiting for Kafka..."
+
+        until /opt/kafka/bin/kafka-topics.sh \
+          --bootstrap-server kafka:9092 \
+          --list >/dev/null 2>&1; do
+          sleep 5
+        done
+
+        echo "Kafka is ready."
+
+        /opt/kafka/bin/kafka-topics.sh \
+          --bootstrap-server kafka:9092 \
+          --create \
+          --if-not-exists \
+          --topic chat.messages \
+          --partitions 3 \
+          --replication-factor 1
+
+        echo "Kafka topic initialization complete."
+
+
+  # --------------------------------------------------
+  # Spring Boot Chat Server
+  # --------------------------------------------------
+
+  chatserver:
+    build:
+      context: ../api
+      dockerfile: Dockerfile
+
+    container_name: canto-chatserver
+
+    depends_on:
+      postgres:
+        condition: service_started
+
+      kafka-init:
+        condition: service_completed_successfully
+
+      cassandra-init:
+        condition: service_completed_successfully
+
+    environment:
+      SPRING_PROFILES_ACTIVE: prod
+
+      DB_URL: jdbc:postgresql://postgres:5432/chatserver
+      DB_USERNAME: postgres
+      DB_PASSWORD: ${POSTGRES_PASSWORD}
+
+      KAFKA_SERVER: kafka:9092
+
+      CASSANDRA_CONTACT_POINT: cassandra
+      CASSANDRA_PORT: 9042
+      CASSANDRA_KEYSPACE: canto
+
+      FRONTEND_URL: ${FRONTEND_URL}
+
+    ports:
+      - "8080:8080"
+
+    networks:
+      - canto-network
+
+
+  # --------------------------------------------------
+  # Jaeger
+  #
+  # Optional local observability stack.
+  # Start with:
+  # docker compose --profile observability up
+  # --------------------------------------------------
+
   jaeger:
     image: cr.jaegertracing.io/jaegertracing/jaeger:2.20.0
     container_name: canto-jaeger
+
+    profiles:
+      - observability
+
     ports:
       - "16686:16686"
       - "4317:4317"
       - "4318:4318"
 
+    networks:
+      - canto-network
+
+
+# --------------------------------------------------
+# Network
+# --------------------------------------------------
+
+networks:
+  canto-network:
+
+
+# --------------------------------------------------
+# Persistent Volumes
+# --------------------------------------------------
+
 volumes:
+  postgres_data:
   cassandra_data:
+  kafka_data:

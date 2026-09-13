@@ -6,7 +6,7 @@ spring:
     driver-class-name: org.postgresql.Driver
 
   cassandra:
-    contact-points: ${CASSANDRA_CONTRACT_POINT}
+    contact-points: ${CASSANDRA_CONTACT_POINT}
     port: ${CASSANDRA_PORT}
     keyspace-name: ${CASSANDRA_KEYSPACE}
     local-datacenter: datacenter1
@@ -27,6 +27,12 @@ spring:
         "[spring.json.value.default.type]": "com.englabs.chatServer.conversation.dto.event.ChatMessageEvent"
         "[spring.json.trusted.packages]": "com.englabs.chatServer"
 
+    template:
+      observation-enabled: true
+
+    listener:
+      observation-enabled: true
+
 app:
   cors:
     allowed-origins:
@@ -34,6 +40,5 @@ app:
 
 logging:
   level:
-    org.hibernate.SQL: DEBUG
-    org.hibernate.orm.jdbc.bind: TRACE
-    com.zaxxer.hikari: DEBUG
+    root: INFO
+    com.englabs.chatServer: INFO
