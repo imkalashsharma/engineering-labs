@@ -8,6 +8,14 @@ services:
       CASSANDRA_CLUSTER_NAME: canto-cluster
     volumes:
       - cassandra_data:/var/lib/cassandra
+      
+  jaeger:
+    image: cr.jaegertracing.io/jaegertracing/jaeger:2.20.0
+    container_name: canto-jaeger
+    ports:
+      - "16686:16686"
+      - "4317:4317"
+      - "4318:4318"
 
 volumes:
   cassandra_data:

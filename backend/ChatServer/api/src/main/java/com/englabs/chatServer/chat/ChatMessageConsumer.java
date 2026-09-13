@@ -4,6 +4,8 @@ import com.englabs.chatServer.conversation.dto.event.ChatMessageEvent;
 import io.micrometer.core.instrument.Counter;
 import io.micrometer.core.instrument.MeterRegistry;
 import io.micrometer.core.instrument.Timer;
+import io.micrometer.observation.Observation;
+import io.micrometer.observation.ObservationRegistry;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.kafka.annotation.BackOff;
 import org.springframework.kafka.annotation.DltHandler;
@@ -18,8 +20,8 @@ import java.util.UUID;
 @Component
 public class ChatMessageConsumer {
     private final SimpMessagingTemplate messagingTemplate;
-    private final MessageRepository messageRepository;
     private final MessagePersistenceService messagePersistenceService;
+    private final ObservationRegistry observationRegistry;
 
     private final Counter messagesProcessed;
     private final Counter messagesFailed;
@@ -27,13 +29,13 @@ public class ChatMessageConsumer {
 
     public ChatMessageConsumer(
             SimpMessagingTemplate simpMessagingTemplate,
-            MessageRepository messageRepository,
             MessagePersistenceService messagePersistenceService,
+            ObservationRegistry observationRegistry,
             MeterRegistry meterRegistry
     ) {
         this.messagingTemplate = simpMessagingTemplate;
-        this.messageRepository = messageRepository;
         this.messagePersistenceService = messagePersistenceService;
+        this.observationRegistry = observationRegistry;
 
         this.messagesProcessed = Counter.builder("canto.messages.processed")
                 .description("Total number of successfully processed messages")
@@ -65,23 +67,28 @@ public class ChatMessageConsumer {
         try {
             log.info("Kafka consumed message: {}", event.messageId());
 
-            // create new message key
-            MessageKey messageKey = new MessageKey(
-                    event.conversationId(),
-                    event.timestamp(),
-                    UUID.fromString(event.messageId())
-            );
+            Observation.createNotStarted(
+                    "canto.chat.process",
+                    observationRegistry
+            ).observe(() -> {
+                // create new message key
+                MessageKey messageKey = new MessageKey(
+                        event.conversationId(),
+                        event.timestamp(),
+                        UUID.fromString(event.messageId())
+                );
 
-            // create new message
-            Message message = new Message(
-                    messageKey,
-                    UUID.fromString(event.senderId()),
-                    event.content(),
-                    event.timestamp()
-            );
+                // create new message
+                Message message = new Message(
+                        messageKey,
+                        UUID.fromString(event.senderId()),
+                        event.content(),
+                        event.timestamp()
+                );
 
-            messagePersistenceService.persist(message);    // save message
-            messagingTemplate.convertAndSend("/topic/conversations/" + event.conversationId(), event);
+                messagePersistenceService.persist(message);    // save message
+                messagingTemplate.convertAndSend("/topic/conversations/" + event.conversationId(), event);
+            });
 
             messagesProcessed.increment();
         } catch (Exception e) {

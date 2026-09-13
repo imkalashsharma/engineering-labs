@@ -27,6 +27,12 @@ spring:
         "[spring.json.value.default.type]": "com.englabs.chatServer.conversation.dto.event.ChatMessageEvent"
         "[spring.json.trusted.packages]": "com.englabs.chatServer"
 
+    template:
+      observation-enabled: true
+
+    listener:
+      observation-enabled: true
+
 app:
   cors:
     allowed-origins:
