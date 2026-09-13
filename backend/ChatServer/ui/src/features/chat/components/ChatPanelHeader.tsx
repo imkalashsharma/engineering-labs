@@ -5,6 +5,7 @@ import { Button } from "../../../components/ui/button";
 import type { ChatPanelHeaderPropsInterface } from "../type";
 import { useLeaveConversation } from "../hooks/useChat";
 import { useChatPanel } from "../context/ChatPanelContext";
+import { notify } from "../../../lib/toast";
 
 const ChatPanelHeader = ({
   username,
@@ -39,10 +40,16 @@ const ChatPanelHeader = ({
           chatPanel.setUserId(null);
           chatPanel.setMessages([]);
           chatPanel.setJoinState(false);
+
+          notify.success("Successfully left the conversation.");
         },
 
         onError: (error) => {
           console.error("Failed to leave conversation", error);
+
+          notify.error(
+            "Failed to leave the conversation. Please try again later.",
+          );
         },
       },
     );

@@ -7,6 +7,7 @@ import { useState } from "react";
 import { useChatPanel } from "../context/ChatPanelContext";
 import { getMessageHistory } from "../api/chatApi";
 import type { ChatMessage } from "../type";
+import { notify } from "../../../lib/toast";
 
 const JoinConversationPanel = ({ username }: { username: string }) => {
   // states
@@ -16,7 +17,10 @@ const JoinConversationPanel = ({ username }: { username: string }) => {
   const joinConversation = useJoinConversation();
 
   const handleJoinConversation = () => {
-    if (!code.trim()) return;
+    if (!code.trim()) {
+      notify.error("Please enter a conversation code.");
+      return;
+    }
 
     chatPanel.setConversationCode(code.trim()); // set code for panel
 
@@ -48,12 +52,18 @@ const JoinConversationPanel = ({ username }: { username: string }) => {
           } catch (error) {
             console.error("Failed to fetch message history", error);
           }
+
+          notify.success("Successfully joined the conversation!");
         },
 
         onError: (error) => {
           console.error("Failed to join conversation", error);
 
           chatPanel.setJoinState(false);
+
+          notify.error(
+            "Failed to join the conversation. Please check the code and try again.",
+          );
         },
       },
     );
@@ -78,6 +88,7 @@ const JoinConversationPanel = ({ username }: { username: string }) => {
             onChange={(e) => setCode(e.target.value)}
             id="code"
             placeholder="Enter code"
+            autoComplete="off"
           />
         </Field>
       </div>
