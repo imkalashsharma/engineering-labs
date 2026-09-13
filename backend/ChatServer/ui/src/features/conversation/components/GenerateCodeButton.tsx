@@ -1,5 +1,5 @@
 import { Button } from "../../../components/ui/button";
-import { Plus } from "lucide-react";
+import { Loader2, Plus } from "lucide-react";
 import { notify } from "../../../lib/toast";
 
 import { useCreateConversation } from "../hooks/useCreateConversation";
@@ -8,13 +8,15 @@ const GenerateCodeButton = () => {
   const createConversation = useCreateConversation();
 
   const handleClick = () => {
-    try {
-      createConversation.mutate();
+    createConversation.mutate(undefined, {
+      onSuccess: () => {
+        notify.success("New code generated.");
+      },
 
-      notify.success("New code generated.");
-    } catch (e) {
-      console.error(e);
-    }
+      onError: (error) => {
+        notify.error(error.message);
+      },
+    });
   };
 
   return (
@@ -26,7 +28,11 @@ const GenerateCodeButton = () => {
         size={"lg"}
         disabled={createConversation.isPending}
       >
-        <Plus data-icon="inline-end" />
+        {createConversation.isPending ? (
+          <Loader2 className="animate-spin" data-icon="inline-end" />
+        ) : (
+          <Plus data-icon="inline-end" />
+        )}
         Generate New Code
       </Button>
     </div>
