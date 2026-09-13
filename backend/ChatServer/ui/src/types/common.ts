@@ -1,3 +1,5 @@
+import type { ConversationStatusValues } from "@/features/conversation/types";
+
 export interface AppStoreState {
   conversationCode: string | null;
   setConversationCode: (code: string) => void;
