@@ -2,7 +2,7 @@ import { Client } from "@stomp/stompjs";
 
 export function createStompClient() {
   return new Client({
-    brokerURL: "ws://localhost:8080/ws",
+    brokerURL: `${import.meta.env.VITE_WS_URL}/ws`,
     reconnectDelay: 5000,
     onConnect: () => {
       console.log("Websocket connected.");
