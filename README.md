@@ -26,6 +26,8 @@ I build small applications to understand how engineering concepts work in practi
 Practical backend services, APIs, and application architecture.
 
 * [URL Shortener](./backend/URLShortner) — REST API, persistence, Docker, CI/CD ([Try it out!](https://k99-us.netlify.app/))
+* [Canto](https://github.com/imkalashsharma/engineering-labs/tree/main/backend/ChatServer) — Chat Server ([Try it out!](https://imk-canto.netlify.app/))
+
 
 ### 🏗️ System Design
 
