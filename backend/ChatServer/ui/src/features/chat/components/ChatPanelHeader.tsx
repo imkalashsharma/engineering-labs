@@ -41,6 +41,9 @@ const ChatPanelHeader = ({
           chatPanel.setMessages([]);
           chatPanel.setJoinState(false);
 
+          chatPanel.setJoinState(false); // enable join
+          chatPanel.setMessages([]); // clear chats
+
           notify.success("Successfully left the conversation.");
         },
 
@@ -53,9 +56,6 @@ const ChatPanelHeader = ({
         },
       },
     );
-
-    chatPanel.setJoinState(false); // enable join
-    chatPanel.setMessages([]); // clear chats
   };
 
   return (
