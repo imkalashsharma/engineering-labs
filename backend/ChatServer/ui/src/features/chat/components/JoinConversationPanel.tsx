@@ -24,7 +24,6 @@ const JoinConversationPanel = ({ username }: { username: string }) => {
 
     chatPanel.setConversationCode(code.trim()); // set code for panel
 
-    chatPanel.setJoinState(true); // disable
     joinConversation.mutate(
       { username, conversationCode: code.trim() },
       {
@@ -53,6 +52,7 @@ const JoinConversationPanel = ({ username }: { username: string }) => {
             console.error("Failed to fetch message history", error);
           }
 
+          chatPanel.setJoinState(true); // disable
           notify.success("Successfully joined the conversation!");
         },
 
