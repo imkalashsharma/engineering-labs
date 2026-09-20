@@ -1,6 +1,8 @@
-# 🧪 Engineering Labs
+# Engineering Labs
 
-> **Small builds. Big lessons.**
+<p align="center">
+  <img src="./mascot_128.png" alt="Engineering Labs mascot" width="220"/>
+</p>
 
 Engineering Labs is my personal playground for exploring software engineering through focused, hands-on projects.
 
@@ -8,14 +10,14 @@ I build small applications to understand how engineering concepts work in practi
 
 ---
 
-## 🎯 Goals
+## 🍁 Goals
 
-* Learn by building
-* Explore engineering concepts in isolation
-* Experiment with technologies and approaches
-* Understand trade-offs through implementation
-* Document what I learn
-* Build reusable reference implementations
+- Learn by building
+- Explore engineering concepts in isolation
+- Experiment with technologies and approaches
+- Understand trade-offs through implementation
+- Document what I learn
+- Build reusable reference implementations
 
 ---
 
@@ -25,33 +27,32 @@ I build small applications to understand how engineering concepts work in practi
 
 Practical backend services, APIs, and application architecture.
 
-* [URL Shortener](./backend/URLShortner) — REST API, persistence, Docker, CI/CD ([Try it out!](https://k99-us.netlify.app/))
-* [Canto](https://github.com/imkalashsharma/engineering-labs/tree/main/backend/ChatServer) — Chat Server ([Try it out!](https://imk-canto.netlify.app/))
-
+- [URL Shortener](./backend/URLShortner) — REST API, persistence, Docker, CI/CD ([Try it out!](https://k99-us.netlify.app/))
+- [Canto](https://github.com/imkalashsharma/engineering-labs/tree/main/backend/ChatServer) — Chat Server ([Try it out!](https://imk-canto.netlify.app/))
 
 ### 🏗️ System Design
 
 Focused implementations of common system design patterns and components.
 
-*More labs coming soon.*
+_More labs coming soon._
 
-### 🌐 Distributed Systems
+### 🚄 Distributed Systems
 
 Experiments with communication, scalability, resilience, and distributed architectures.
 
-*More labs coming soon.*
+_More labs coming soon._
 
-### 🤖 Applied AI
+### ⚔ Applied AI
 
 Hands-on experiments with modern AI engineering concepts.
 
-*More labs coming soon.*
+_More labs coming soon._
 
 ### ☁️ Cloud & DevOps
 
 Experiments with infrastructure, containers, CI/CD, and cloud deployment.
 
-*More labs coming soon.*
+_More labs coming soon._
 
 ---
 
@@ -69,13 +70,13 @@ The goal isn't to build production-ready software every time. The goal is to und
 
 Each lab has its own documentation covering the things that matter most:
 
-* Problem & motivation
-* Architecture
-* Implementation
-* Engineering decisions
-* Trade-offs
-* Lessons learned
-* Possible improvements
+- Problem & motivation
+- Architecture
+- Implementation
+- Engineering decisions
+- Trade-offs
+- Lessons learned
+- Possible improvements
 
 The root README keeps the high-level picture; each lab contains the details.
 
