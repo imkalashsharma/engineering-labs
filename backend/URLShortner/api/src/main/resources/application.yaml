@@ -1,0 +1,8 @@
+spring:
+  application:
+    name: URLShortener
+
+server:
+  port: ${PORT:8080}
+  servlet:
+    context-path: /api

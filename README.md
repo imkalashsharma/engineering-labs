@@ -1,76 +1,91 @@
-# 🧪 Engineering Labs
+# Engineering Labs
 
-> **Small builds. Big lessons.**
+<p align="center">
+  <img src="./mascot_128.png" alt="Engineering Labs mascot" width="220"/>
+</p>
 
-Engineering Labs is my personal playground for exploring software engineering through hands-on projects.
+Engineering Labs is my personal playground for exploring software engineering through focused, hands-on projects.
 
-Instead of only reading about concepts, I build small, focused applications to understand how they work in practice. Every lab is intentionally scoped to explore one idea well.
+I build small applications to understand how engineering concepts work in practice—not just how they work in theory. Each lab is intentionally scoped around a specific idea, with an emphasis on learning, experimentation, and practical understanding.
 
 ---
 
-## 🎯 Goals
+## 🍁 Goals
 
 - Learn by building
 - Explore engineering concepts in isolation
-- Experiment with new technologies
-- Document lessons learned
-- Create reusable reference implementations
+- Experiment with technologies and approaches
+- Understand trade-offs through implementation
+- Document what I learn
+- Build reusable reference implementations
 
 ---
 
-## 🗂️ Lab Categories
+## 🗂️ Labs
 
 ### ⚙️ Backend
 
-Practical backend services and APIs.
+Practical backend services, APIs, and application architecture.
 
-- URL Shortener
-
----
+- [URL Shortener](./backend/URLShortner) — REST API, persistence, Docker, CI/CD ([Try it out!](https://k99-us.netlify.app/))
+- [Canto](https://github.com/imkalashsharma/engineering-labs/tree/main/backend/ChatServer) — Chat Server ([Try it out!](https://imk-canto.netlify.app/))
 
 ### 🏗️ System Design
 
-Focused implementations of common distributed system components.
+Focused implementations of common system design patterns and components.
 
----
+_More labs coming soon._
 
-### 🌐 Distributed Systems
+### 🚄 Distributed Systems
 
-Experiments with communication, resilience, and scalability.
+Experiments with communication, scalability, resilience, and distributed architectures.
 
----
+_More labs coming soon._
 
-### 🤖 Applied AI
+### ⚔ Applied AI
 
-Projects exploring modern AI engineering.
-
----
+Hands-on experiments with modern AI engineering concepts.
+* [Email Spam Classifier from Scratch](https://github.com/imkalashsharma/spam-classification-ui) — TypeScript, Python, FastAPI, Classification Model ([Try it out!](https://ai-spam-classification.netlify.app/))
+* [AI Car Search](https://github.com/imkalashsharma/AICarSearch) — Java, REST API, Gemini AI, PostgreSQL
 
 ### ☁️ Cloud & DevOps
 
-Infrastructure and deployment experiments.
+Experiments with infrastructure, containers, CI/CD, and cloud deployment.
+
+_More labs coming soon._
 
 ---
 
-## 📚 Every Lab Includes
+## 🧭 How I Build
 
-- Problem Statement
+Each lab follows a simple philosophy:
+
+**Understand → Build → Break → Learn → Improve**
+
+The goal isn't to build production-ready software every time. The goal is to understand an engineering problem deeply by building and experimenting with it.
+
+---
+
+## 📚 Lab Documentation
+
+Each lab has its own documentation covering the things that matter most:
+
+- Problem & motivation
 - Architecture
 - Implementation
+- Engineering decisions
 - Trade-offs
-- Lessons Learned
-- Possible Improvements
+- Lessons learned
+- Possible improvements
+
+The root README keeps the high-level picture; each lab contains the details.
 
 ---
 
 ## 🚀 Why Engineering Labs?
 
-This repository documents how I learn.
+This repository is a record of how I learn software engineering.
 
-Some projects are only a few hundred lines of code. Others are larger experiments.
-
-The goal isn't to build production-ready software every time—it's to understand engineering concepts deeply by building them.
-
----
+Some labs may be small experiments. Others may evolve into larger systems. What matters is the engineering thinking behind them—understanding **why** something works, **where** it breaks, and **what** could make it better.
 
 > **Build. Break. Learn. Repeat.**
