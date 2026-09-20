@@ -45,8 +45,8 @@ _More labs coming soon._
 ### ⚔ Applied AI
 
 Hands-on experiments with modern AI engineering concepts.
-
-_More labs coming soon._
+* [Email Spam Classifier from Scratch](https://github.com/imkalashsharma/spam-classification-ui) — TypeScript, Python, FastAPI, Classification Model ([Try it out!](https://ai-spam-classification.netlify.app/))
+* [AI Car Search](https://github.com/imkalashsharma/AICarSearch) — Java, REST API, Gemini AI, PostgreSQL
 
 ### ☁️ Cloud & DevOps
 
